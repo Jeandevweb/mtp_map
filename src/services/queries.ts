@@ -2,14 +2,6 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchBikeStation } from "./api";
 
 import useBikeStationStore from "../../src/store/useBikeStationStore";
-import { BikeInfo } from "../types/bikeInfo";
-
-// type BikeQuery = {
-//   data: undefined;
-//   isError: boolean;
-//   isPending: boolean;
-//   queryFn?: undefined;
-// };
 
 export function useBikeStation() {
   const { setStations } = useBikeStationStore();
@@ -20,9 +12,4 @@ export function useBikeStation() {
       setStations(res);
     },
   });
-  //   return {
-  //     isPending,
-  //     isError,
-  //     data,
-  //   };
 }

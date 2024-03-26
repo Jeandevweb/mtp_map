@@ -1,8 +1,9 @@
 import { create } from "zustand";
+import { BikeInfo } from "../types/bikeInfo";
 
 type BikeStationState = {
-  stations: [];
-  setStations: (value: []) => void;
+  stations: BikeInfo[];
+  setStations: (value: BikeInfo[]) => void;
   locationClient: [number, number];
   setLocationClient: (value: [number, number]) => void;
 };
