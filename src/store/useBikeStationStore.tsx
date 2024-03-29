@@ -6,6 +6,9 @@ type BikeStationState = {
   setStations: (value: BikeInfo[]) => void;
   locationClient: [number, number];
   setLocationClient: (value: [number, number]) => void;
+
+  isShowStation: boolean;
+  setisShowStation: () => void;
 };
 
 const useBikeStationStore = create<BikeStationState>()((set) => ({
@@ -14,6 +17,10 @@ const useBikeStationStore = create<BikeStationState>()((set) => ({
 
   locationClient: [43.610769, 3.876716],
   setLocationClient: (value) => set(() => ({ locationClient: value })),
+
+  isShowStation: true,
+  setisShowStation: () =>
+    set((state) => ({ isShowStation: !state.isShowStation })),
 }));
 
 export default useBikeStationStore;

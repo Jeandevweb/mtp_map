@@ -1,14 +1,12 @@
-import { LayersControl, MapContainer, TileLayer } from "react-leaflet";
-
 import "./App.css";
 import "leaflet/dist/leaflet.css";
 
 import { useBikeStation } from "./services/queries";
 
-import BikeStationMarker from "./components/BikeStationMarker";
 import { useEffect } from "react";
-import LocationMarker from "./components/LocationMarker";
-import TileLayers from "./components/TileLayers";
+import Map from "./components/Map";
+import CardControl from "./components/CardControl/CardControl";
+import { Box } from "@chakra-ui/react";
 
 function App() {
   const { data } = useBikeStation();
@@ -18,19 +16,10 @@ function App() {
   }, [data]);
 
   return (
-    <MapContainer center={[43.610769, 3.876716]} zoom={14}>
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      <LayersControl position="topright" key="bikeStation">
-        <BikeStationMarker />
-      </LayersControl>
-      <LayersControl position="topright">
-        <TileLayers />
-      </LayersControl>
-      <LocationMarker />
-    </MapContainer>
+    <Box height="100vh" width="100vw" position="relative">
+      <CardControl />
+      <Map />
+    </Box>
   );
 }
 

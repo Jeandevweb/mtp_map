@@ -6,7 +6,7 @@ export const bikeIcon = new L.Icon({
   iconUrl: bicycle,
   iconRetinaUrl: bicycle,
   popupAnchor: [-0, -0],
-  iconSize: [60, 60],
+  iconSize: [40, 40],
 });
 
 export const homeIcon = new L.Icon({

@@ -12,3 +12,8 @@
 .leaflet-bottom {
   display: none;
 }
+
+.leaflet-top {
+  margin-left: 10px;
+  margin-top: 10px;
+}
