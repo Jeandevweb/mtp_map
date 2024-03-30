@@ -1,24 +1,13 @@
-import { Box, Flex, Image, Text } from "@chakra-ui/react";
+import { Flex, Image, Text } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import useTileLayersStore from "../../store/useTileLayersStore";
 import { tileLayers } from "../../utils/tileLayers";
 
-const CardLayout = () => {
+const MapLayers = () => {
   const { tileLayerValue, setTileLayerValue } = useTileLayersStore();
 
   return (
-    <Box
-      as={motion.div}
-      top="95px"
-      zIndex={999}
-      right="20px"
-      position="absolute"
-      backgroundColor="white"
-      color="white"
-      padding="15px 15px 5px"
-      transition="all 1s ease-out"
-      borderRadius="10px"
-    >
+    <>
       {tileLayers.map((tile) => {
         return (
           <Flex
@@ -81,8 +70,8 @@ const CardLayout = () => {
           </Flex>
         );
       })}
-    </Box>
+    </>
   );
 };
 
-export default CardLayout;
+export default MapLayers;

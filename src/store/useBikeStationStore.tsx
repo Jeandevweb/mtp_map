@@ -3,7 +3,7 @@ import { BikeInfo } from "../types/bikeInfo";
 
 type BikeStationState = {
   stations: BikeInfo[];
-  setStations: (value: BikeInfo[]) => void;
+  setStations: (value: any) => void;
   locationClient: [number, number];
   setLocationClient: (value: [number, number]) => void;
 
@@ -13,7 +13,7 @@ type BikeStationState = {
 
 const useBikeStationStore = create<BikeStationState>()((set) => ({
   stations: [],
-  setStations: (value) => set(() => ({ stations: value })),
+  setStations: (value: BikeInfo[]) => set(() => ({ stations: value })),
 
   locationClient: [43.610769, 3.876716],
   setLocationClient: (value) => set(() => ({ locationClient: value })),

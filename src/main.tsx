@@ -7,6 +7,7 @@ import { ChakraProvider, ColorModeScript } from "@chakra-ui/react";
 import Fonts from "./assets/Fonts.tsx";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import LoaderComponent from "./components/LoaderComponent.tsx";
 
 const queryClient = new QueryClient();
 

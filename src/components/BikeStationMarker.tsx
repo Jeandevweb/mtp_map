@@ -1,18 +1,15 @@
-import { LayerGroup, LayersControl, Marker, Popup } from "react-leaflet";
+import { Marker, Popup } from "react-leaflet";
 import { Fragment } from "react/jsx-runtime";
 import useBikeStationStore from "../store/useBikeStationStore";
 import { BikeInfo } from "../types/bikeInfo";
 
 import { bikeIcon } from "../utils/icons";
-import useGenericStore from "../store/useGenericStore";
 
 const BikeStationMarker = () => {
   const { stations, isShowStation } = useBikeStationStore();
 
   return (
     <>
-      {/* <LayersControl.Overlay checked name="Bike Station"> */}
-      {/* <LayerGroup> */}
       {isShowStation &&
         stations?.map((station: BikeInfo) => {
           return (
@@ -31,9 +28,6 @@ const BikeStationMarker = () => {
             </Fragment>
           );
         })}
-
-      {/* </LayerGroup> */}
-      {/* </LayersControl.Overlay> */}
     </>
   );
 };
