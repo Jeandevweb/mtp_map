@@ -10,6 +10,7 @@ export function useBikeStation() {
     queryFn: async () => {
       const res = await fetchBikeStation();
       setStations(res);
+      return res;
     },
   });
 }
