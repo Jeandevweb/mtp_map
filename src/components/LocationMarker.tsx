@@ -10,7 +10,7 @@ const LocationMarker = () => {
     click() {
       map.locate();
     },
-    locationfound(e: L.LocationEvent) {
+    locationfound(e: any) {
       setLocationClient(e.latlng);
       map.flyTo(e.latlng, map.getZoom());
     },

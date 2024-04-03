@@ -33,13 +33,12 @@ const MapLayers = () => {
                 marginRight="20px"
                 rounded="xl"
                 boxShadow="md"
-                sx={
-                  tileLayerValue.url === tile.url && {
-                    filter: "grayscale(0)",
-                    outline: "4px double #32a1ce",
-                    borderRadius: "10px",
-                  }
-                }
+                sx={{
+                  filter: tileLayerValue.url === tile.url ? "grayscale(0)" : "",
+                  outline:
+                    tileLayerValue.url === tile.url ? "4px double #32a1ce" : "",
+                  borderRadius: tileLayerValue.url === tile.url ? "10px" : "",
+                }}
                 initial={{ scale: 1 }}
                 whileTap={{ scale: 0.95 }}
                 whileHover={{
