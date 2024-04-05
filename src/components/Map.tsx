@@ -2,6 +2,9 @@ import { MapContainer, TileLayer } from "react-leaflet";
 import useTileLayersStore from "../store/useTileLayersStore";
 import BikeStationMarker from "./BikeStationMarker";
 import LocationMarker from "./LocationMarker";
+import LeafletgeoSearch from "./LeafletgeoSearch";
+import "leaflet/dist/leaflet.css";
+import "leaflet-geosearch/dist/geosearch.css";
 
 const Map = () => {
   const { tileLayerValue } = useTileLayersStore();
@@ -15,6 +18,7 @@ const Map = () => {
       />
       <BikeStationMarker />
       <LocationMarker />
+      <LeafletgeoSearch />
     </MapContainer>
   );
 };
