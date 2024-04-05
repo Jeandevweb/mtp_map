@@ -15,7 +15,7 @@ const LeafletgeoSearch = () => {
         citycodes: 34172,
       },
     });
-    const searchControl = new GeoSearchControl({
+    const searchControl = new (GeoSearchControl as any)({
       provider: provider,
       style: "bar",
       notFoundMessage: "Sorry, that address could not be found.",
