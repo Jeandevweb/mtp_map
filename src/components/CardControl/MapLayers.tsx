@@ -1,5 +1,5 @@
 import { Flex, Image, Text } from "@chakra-ui/react";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import useTileLayersStore from "../../store/useTileLayersStore";
 import { tileLayers } from "../../utils/tileLayers";
 
@@ -7,10 +7,11 @@ const MapLayers = () => {
   const { tileLayerValue, setTileLayerValue } = useTileLayersStore();
 
   return (
-    <>
+    <AnimatePresence>
       {tileLayers.map((tile) => {
         return (
           <Flex
+            as={motion.div}
             key={tile.name}
             boxShadow="lg"
             rounded="2xl"
@@ -19,6 +20,19 @@ const MapLayers = () => {
             color="darkslategrey"
             backgroundColor="whiteAlpha.900"
             zIndex={10}
+            whileHover={{
+              scale: 1.05,
+              transition: { duration: 0.1 },
+            }}
+            cursor="pointer"
+            onClick={() =>
+              setTileLayerValue(
+                tile.attribution,
+                tile.url,
+                tile.name,
+                !tile.visible
+              )
+            }
           >
             <Flex align="center" flex="1">
               <Image
@@ -42,17 +56,9 @@ const MapLayers = () => {
                 initial={{ scale: 1 }}
                 whileTap={{ scale: 0.95 }}
                 whileHover={{
-                  scale: 1.1,
-                  transition: { duration: 0.3 },
+                  scale: 1.05,
+                  transition: { duration: 0.1 },
                 }}
-                onClick={() =>
-                  setTileLayerValue(
-                    tile.attribution,
-                    tile.url,
-                    tile.name,
-                    !tile.visible
-                  )
-                }
               />
               <Flex
                 width="75%"
@@ -69,7 +75,7 @@ const MapLayers = () => {
           </Flex>
         );
       })}
-    </>
+    </AnimatePresence>
   );
 };
 

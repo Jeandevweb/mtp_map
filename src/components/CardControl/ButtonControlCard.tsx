@@ -1,11 +1,12 @@
 import { Button } from "@chakra-ui/react";
 import { FaGear } from "react-icons/fa6";
+import useGenericStore, { GenericState } from "../../store/useGenericStore";
 
-type ButtonControlCardProps = {
-  onToggle: () => void;
-};
+const ButtonControlCard = () => {
+  const setIsOpen = useGenericStore(
+    (state: GenericState) => state.setIsOpenGeneric
+  );
 
-const ButtonControlCard = ({ onToggle }: ButtonControlCardProps) => {
   return (
     <Button
       fontSize="100px"
@@ -22,7 +23,7 @@ const ButtonControlCard = ({ onToggle }: ButtonControlCardProps) => {
       color="black"
       borderRadius="50px"
       outline="0"
-      onClick={onToggle}
+      onClick={setIsOpen}
     >
       <FaGear />
     </Button>

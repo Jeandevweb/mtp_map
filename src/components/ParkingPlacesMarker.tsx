@@ -1,34 +1,35 @@
 import { Marker, Popup } from "react-leaflet";
 import { Fragment } from "react/jsx-runtime";
-import useBikeStationStore from "../store/useBikeStationStore";
+import useParkingPlacesStore from "../store/useParkingPlacesStore";
 import useGenericStore from "../store/useGenericStore";
-import { BikeInfo } from "../types/bikeInfo";
+
+import { ParkingPlaces } from "../types/parkingPlaces";
+
 import { linkGoogle, linkGooglePlus } from "../utils/externalLink";
 
-import { bikeIcon } from "../utils/icons";
+import { parkingIcon } from "../utils/icons";
 import { Box, Divider, Flex, Heading, Link, Text } from "@chakra-ui/react";
 
-const BikeStationMarker = () => {
-  const stations = useBikeStationStore((state) => state.stations);
-  const isShowStation = useBikeStationStore((state) => state.isShowStation);
+const ParkingPlacesMarker = () => {
+  const { places, isShowPlaces } = useParkingPlacesStore();
   const setOpenInfo = useGenericStore((state) => state.setOpenInfo);
   const setId = useGenericStore((state) => state.setId);
 
   return (
     <>
-      {isShowStation &&
-        stations?.map((station: BikeInfo) => {
+      {isShowPlaces &&
+        places?.map((places: ParkingPlaces) => {
           return (
-            <Fragment key={station.id}>
+            <Fragment key={places.id}>
               <Marker
                 position={[
-                  station.location.value.coordinates[1],
-                  station.location.value.coordinates[0],
+                  places.location.value.coordinates[1],
+                  places.location.value.coordinates[0],
                 ]}
-                icon={bikeIcon}
+                icon={parkingIcon}
                 eventHandlers={{
                   click: () => {
-                    setId(station.id);
+                    setId(places.id);
                     setOpenInfo(false);
                   },
                 }}
@@ -46,7 +47,7 @@ const BikeStationMarker = () => {
                   >
                     <Flex direction="column" align="center" gap="2">
                       <Heading as="h4" size="md">
-                        {station.address.value.streetAddress}
+                        {places.name.value}
                         <Link
                           onClick={() => setOpenInfo(true)}
                           fontSize="md"
@@ -56,8 +57,8 @@ const BikeStationMarker = () => {
                         </Link>
                       </Heading>
                       <Text as="i">
-                        Vélo disponible : {station.availableBikeNumber.value} /{" "}
-                        {station.totalSlotNumber.value}
+                        Places disponibles : {places.availableSpotNumber.value}{" "}
+                        / {places.totalSpotNumber.value}
                       </Text>
                       <Divider
                         w="100%"
@@ -67,9 +68,9 @@ const BikeStationMarker = () => {
                       />
                       <Link
                         href={linkGoogle(
-                          station.location.value.coordinates[1],
-                          station.location.value.coordinates[0],
-                          station.id
+                          places.location.value.coordinates[1],
+                          places.location.value.coordinates[0],
+                          places.id
                         )}
                         isExternal
                       >
@@ -77,8 +78,8 @@ const BikeStationMarker = () => {
                       </Link>
                       <Link
                         href={linkGooglePlus(
-                          station.location.value.coordinates[1],
-                          station.location.value.coordinates[0]
+                          places.location.value.coordinates[1],
+                          places.location.value.coordinates[0]
                         )}
                         isExternal
                       >
@@ -95,4 +96,4 @@ const BikeStationMarker = () => {
   );
 };
 
-export default BikeStationMarker;
+export default ParkingPlacesMarker;
