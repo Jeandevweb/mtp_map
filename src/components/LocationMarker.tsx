@@ -1,13 +1,12 @@
-import { Marker, Popup, useMapEvents } from "react-leaflet";
+import { useMapEvents } from "react-leaflet";
 
 import useBikeStationStore from "../store/useBikeStationStore";
 
-import { homeIcon } from "../utils/icons";
 import { useState } from "react";
 import useGenericStore from "../store/useGenericStore";
 
 const LocationMarker = () => {
-  const { locationClient, setLocationClient } = useBikeStationStore();
+  const { setLocationClient } = useBikeStationStore();
   const [clikedOnMap, setClickOnMap] = useState(false);
   const setOpenInfo = useGenericStore((state) => state.setOpenInfo);
   const setIsOpenGeneric = useGenericStore((state) => state.setIsOpenGeneric);
