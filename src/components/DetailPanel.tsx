@@ -14,14 +14,24 @@ import {
   usePrefersReducedMotion,
 } from "@chakra-ui/react";
 import { AnimatePresence, motion } from "framer-motion";
-import { FaArrowUpRightFromSquare, FaDiamondTurnRight, FaXmark } from "react-icons/fa6";
+import {
+  FaArrowUpRightFromSquare,
+  FaDiamondTurnRight,
+  FaPersonWalking,
+  FaXmark,
+} from "react-icons/fa6";
 import { Fragment } from "react";
 import { layerById } from "../layers/registry";
 import { useLayerData } from "../services/queries";
 import useUIStore from "../store/useUIStore";
 import type { LayerDef } from "../layers/types";
 import { googleMapsDirections, googleMapsSearch } from "../utils/externalLink";
-import { statusColorScheme, timeAgo } from "../utils/format";
+import {
+  distanceMeters,
+  formatDistanceWalk,
+  statusColorScheme,
+  timeAgo,
+} from "../utils/format";
 
 /**
  * Panneau de détail d'un lieu, ouvert via « Détails » dans un popup.
@@ -53,10 +63,13 @@ const DetailPanelContent = ({
   markerId: string;
 }) => {
   const setSelection = useUIStore((s) => s.setSelection);
+  const userPosition = useUIStore((s) => s.userPosition);
   const { data, isLoading } = useLayerData(layer);
   const marker = data?.find((m) => m.id === markerId);
   const reducedMotion = usePrefersReducedMotion();
   const shadow = useColorModeValue("floating", "floatingDark");
+  const distance =
+    userPosition && marker ? distanceMeters(userPosition, marker.position) : null;
 
   const close = () => setSelection(null);
   const status = marker?.status;
@@ -139,6 +152,12 @@ const DetailPanelContent = ({
                 <Text fontSize="sm" color="fg.muted" mt="0.5">
                   {marker.subtitle}
                 </Text>
+              )}
+              {distance !== null && (
+                <Flex align="center" gap="1.5" mt="1" color="fg.muted">
+                  <Icon as={FaPersonWalking} boxSize="3.5" aria-hidden />
+                  <Text fontSize="sm">{formatDistanceWalk(distance)}</Text>
+                </Flex>
               )}
             </>
           ) : (

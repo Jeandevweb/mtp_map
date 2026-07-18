@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Circle, Marker, useMapEvents } from "react-leaflet";
 import { useToast } from "@chakra-ui/react";
 import type { LatLng } from "leaflet";
+import useUIStore from "../../store/useUIStore";
 import { locateIcon } from "../../utils/markerIcons";
 
 /**
@@ -11,12 +12,15 @@ import { locateIcon } from "../../utils/markerIcons";
 const LocationLayer = () => {
   const [position, setPosition] = useState<LatLng | null>(null);
   const [accuracy, setAccuracy] = useState(0);
+  const setUserPosition = useUIStore((s) => s.setUserPosition);
   const toast = useToast();
 
   useMapEvents({
     locationfound(e) {
       setPosition(e.latlng);
       setAccuracy(e.accuracy);
+      // Partagée avec les popups/détails pour afficher les distances.
+      setUserPosition([e.latlng.lat, e.latlng.lng]);
     },
     locationerror() {
       toast({
