@@ -21,6 +21,10 @@ type UIState = {
   setSearchResult: (
     result: { position: [number, number]; label: string } | null
   ) => void;
+
+  /** Position géolocalisée de l'utilisateur ([lat, lng]), si accordée. */
+  userPosition: [number, number] | null;
+  setUserPosition: (position: [number, number] | null) => void;
 };
 
 const useUIStore = create<UIState>()(
@@ -37,6 +41,9 @@ const useUIStore = create<UIState>()(
 
       searchResult: null,
       setSearchResult: (result) => set({ searchResult: result }),
+
+      userPosition: null,
+      setUserPosition: (position) => set({ userPosition: position }),
     }),
     {
       name: "mtp-map-ui",

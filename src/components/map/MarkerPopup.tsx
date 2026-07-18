@@ -8,10 +8,15 @@ import {
   Progress,
   Text,
 } from "@chakra-ui/react";
-import { FaDiamondTurnRight, FaCircleInfo } from "react-icons/fa6";
+import { FaDiamondTurnRight, FaCircleInfo, FaPersonWalking } from "react-icons/fa6";
 import type { LayerDef, MarkerData } from "../../layers/types";
 import { googleMapsDirections } from "../../utils/externalLink";
-import { statusColorScheme, timeAgo } from "../../utils/format";
+import {
+  distanceMeters,
+  formatDistanceWalk,
+  statusColorScheme,
+  timeAgo,
+} from "../../utils/format";
 import useUIStore from "../../store/useUIStore";
 
 type Props = {
@@ -22,9 +27,13 @@ type Props = {
 /** Contenu de la bulle affichée au clic sur un marqueur. */
 const MarkerPopup = ({ layer, marker }: Props) => {
   const setSelection = useUIStore((s) => s.setSelection);
+  const userPosition = useUIStore((s) => s.userPosition);
   const [lat, lng] = marker.position;
   const status = marker.status;
   const colorScheme = status ? statusColorScheme(status.ratio) : null;
+  const distance = userPosition
+    ? distanceMeters(userPosition, marker.position)
+    : null;
 
   return (
     <Box p="4" pt="3.5">
@@ -50,6 +59,12 @@ const MarkerPopup = ({ layer, marker }: Props) => {
             <Text fontSize="xs" color="fg.muted" mt="0.5" noOfLines={1}>
               {marker.subtitle}
             </Text>
+          )}
+          {distance !== null && (
+            <Flex align="center" gap="1.5" mt="1" color="fg.muted">
+              <Icon as={FaPersonWalking} boxSize="3" aria-hidden />
+              <Text fontSize="xs">{formatDistanceWalk(distance)}</Text>
+            </Flex>
           )}
         </Box>
       </Flex>
