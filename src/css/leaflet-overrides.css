@@ -139,6 +139,20 @@
   transform: scale(1.15);
 }
 
+/* Marqueur dont le panneau de détail est ouvert : plus grand + anneau accent. */
+.mtp-pin--selected {
+  width: 42px;
+  height: 42px;
+  border-width: 3px;
+  box-shadow:
+    0 2px 8px rgba(15, 23, 42, 0.4),
+    0 0 0 4px var(--chakra-colors-accent-300);
+}
+
+.leaflet-marker-icon:hover .mtp-pin--selected {
+  transform: none;
+}
+
 /* Point bleu "ma position" avec halo pulsé. */
 .mtp-locate-dot {
   width: 16px;

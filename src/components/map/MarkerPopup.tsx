@@ -79,27 +79,6 @@ const MarkerPopup = ({ layer, marker }: Props) => {
             </Flex>
           )}
         </Box>
-        <IconButton
-          aria-label={
-            isFavorite ? "Retirer des favoris" : "Ajouter aux favoris"
-          }
-          aria-pressed={isFavorite}
-          icon={isFavorite ? <FaHeart /> : <FaRegHeart />}
-          size="xs"
-          variant="ghost"
-          color={isFavorite ? "red.400" : "fg.muted"}
-          borderRadius="8px"
-          flexShrink={0}
-          onClick={() =>
-            toggleFavorite({
-              layerId: layer.id,
-              markerId: marker.id,
-              title: marker.title,
-              subtitle: marker.subtitle,
-              position: marker.position,
-            })
-          }
-        />
       </Flex>
 
       {/* Disponibilité en un coup d'œil */}
@@ -174,6 +153,28 @@ const MarkerPopup = ({ layer, marker }: Props) => {
         >
           Détails
         </Button>
+        {/* Loin du bouton × de fermeture pour éviter les clics ratés */}
+        <IconButton
+          aria-label={
+            isFavorite ? "Retirer des favoris" : "Ajouter aux favoris"
+          }
+          aria-pressed={isFavorite}
+          icon={isFavorite ? <FaHeart /> : <FaRegHeart />}
+          size="sm"
+          variant="outline"
+          color={isFavorite ? "red.400" : "fg.muted"}
+          borderRadius="10px"
+          flexShrink={0}
+          onClick={() =>
+            toggleFavorite({
+              layerId: layer.id,
+              markerId: marker.id,
+              title: marker.title,
+              subtitle: marker.subtitle,
+              position: marker.position,
+            })
+          }
+        />
       </Flex>
     </Box>
   );

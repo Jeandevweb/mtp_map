@@ -189,6 +189,24 @@ const SearchBar = ({ map }: Props) => {
               flexShrink={0}
             />
           )}
+          {favorites.length > 0 && (
+            <IconButton
+              aria-label={`Mes favoris (${favorites.length})`}
+              title={`Mes favoris (${favorites.length})`}
+              icon={<FaHeart />}
+              size="md"
+              variant="ghost"
+              color="red.400"
+              borderRadius="12px"
+              flexShrink={0}
+              onClick={() => {
+                setQuery("");
+                setHits([]);
+                setIsOpen(true);
+                inputRef.current?.focus();
+              }}
+            />
+          )}
           <IconButton
             aria-label="Ouvrir les réglages"
             icon={<FaGear />}
