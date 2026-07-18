@@ -1,0 +1,204 @@
+/*
+ * Habillage du "chrome" Leaflet (popups, contrôles de zoom, clusters,
+ * marqueurs) pour qu'il suive le design system : on s'appuie sur les
+ * variables CSS générées par Chakra, qui changent automatiquement avec
+ * le mode clair/sombre.
+ */
+
+/* La carte est confinée sous l'UI flottante de l'app. */
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+  position: relative;
+  z-index: 0;
+  font-family: var(--chakra-fonts-body);
+  background: var(--chakra-colors-bg-subtle);
+}
+
+/* ---------- Popups ---------- */
+
+.leaflet-popup-content-wrapper {
+  background: var(--chakra-colors-bg-surface);
+  color: var(--chakra-colors-fg-default);
+  border-radius: 14px;
+  box-shadow:
+    0 2px 8px rgba(15, 23, 42, 0.08),
+    0 8px 24px rgba(15, 23, 42, 0.16);
+  padding: 0;
+}
+
+.leaflet-popup-content {
+  margin: 0;
+  min-width: 248px;
+  max-width: 300px;
+  line-height: 1.45;
+}
+
+.leaflet-popup-content p {
+  margin: 0;
+}
+
+.leaflet-popup-tip {
+  background: var(--chakra-colors-bg-surface);
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.12);
+}
+
+.leaflet-container a.leaflet-popup-close-button {
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: var(--chakra-colors-fg-muted);
+  transition: background-color 0.15s ease-out;
+}
+
+.leaflet-container a.leaflet-popup-close-button:hover {
+  color: var(--chakra-colors-fg-default);
+  background: var(--chakra-colors-bg-hover);
+}
+
+/* ---------- Contrôles (zoom, attribution) ---------- */
+
+.leaflet-bar {
+  border: none !important;
+  border-radius: 12px;
+  box-shadow:
+    0 2px 8px rgba(15, 23, 42, 0.08),
+    0 8px 24px rgba(15, 23, 42, 0.12);
+  overflow: hidden;
+}
+
+.leaflet-bar a {
+  background: var(--chakra-colors-bg-surface);
+  color: var(--chakra-colors-fg-default);
+  border-bottom: 1px solid var(--chakra-colors-border-default);
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  font-size: 18px;
+  transition: background-color 0.15s ease-out;
+}
+
+.leaflet-bar a:last-child {
+  border-bottom: none;
+}
+
+.leaflet-bar a:hover,
+.leaflet-bar a:focus {
+  background: var(--chakra-colors-bg-hover);
+  color: var(--chakra-colors-fg-default);
+}
+
+.leaflet-bar a.leaflet-disabled {
+  background: var(--chakra-colors-bg-surface);
+  color: var(--chakra-colors-gray-300);
+}
+
+.leaflet-control-attribution {
+  background: color-mix(
+    in srgb,
+    var(--chakra-colors-bg-surface) 80%,
+    transparent
+  ) !important;
+  color: var(--chakra-colors-fg-muted);
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 6px 0 0 0;
+}
+
+.leaflet-control-attribution a {
+  color: var(--chakra-colors-fg-muted);
+}
+
+/* ---------- Marqueurs (divIcon) ---------- */
+
+.mtp-pin-wrap {
+  background: none;
+  border: none;
+}
+
+.mtp-pin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 2.5px solid white;
+  color: white;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.35);
+  transition: transform 0.15s ease-out;
+}
+
+.leaflet-marker-icon:hover .mtp-pin {
+  transform: scale(1.15);
+}
+
+/* Point bleu "ma position" avec halo pulsé. */
+.mtp-locate-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--chakra-colors-accent-500);
+  border: 3px solid white;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.4);
+  position: relative;
+}
+
+.mtp-locate-dot::after {
+  content: "";
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  background: var(--chakra-colors-accent-500);
+  opacity: 0.25;
+  animation: mtp-pulse 2s ease-out infinite;
+}
+
+@keyframes mtp-pulse {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.35;
+  }
+  70% {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* ---------- Clusters ---------- */
+
+.mtp-cluster {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: white;
+  font-weight: 600;
+  font-size: 13px;
+  border: 3px solid white;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.35);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mtp-pin,
+  .leaflet-bar a,
+  .leaflet-container a.leaflet-popup-close-button {
+    transition: none;
+  }
+  .mtp-locate-dot::after {
+    animation: none;
+    opacity: 0;
+  }
+  .leaflet-fade-anim .leaflet-popup {
+    transition: none;
+  }
+}
