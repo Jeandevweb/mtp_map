@@ -17,12 +17,15 @@ import { AnimatePresence, motion } from "framer-motion";
 import {
   FaArrowUpRightFromSquare,
   FaDiamondTurnRight,
+  FaHeart,
   FaPersonWalking,
+  FaRegHeart,
   FaXmark,
 } from "react-icons/fa6";
 import { Fragment } from "react";
 import { layerById } from "../layers/registry";
 import { useLayerData } from "../services/queries";
+import useFavoritesStore from "../store/useFavoritesStore";
 import useUIStore from "../store/useUIStore";
 import type { LayerDef } from "../layers/types";
 import { googleMapsDirections, googleMapsSearch } from "../utils/externalLink";
@@ -70,6 +73,10 @@ const DetailPanelContent = ({
   const shadow = useColorModeValue("floating", "floatingDark");
   const distance =
     userPosition && marker ? distanceMeters(userPosition, marker.position) : null;
+  const isFavorite = useFavoritesStore((s) =>
+    s.favorites.some((f) => f.markerId === markerId)
+  );
+  const toggleFavorite = useFavoritesStore((s) => s.toggleFavorite);
 
   const close = () => setSelection(null);
   const status = marker?.status;
@@ -167,6 +174,28 @@ const DetailPanelContent = ({
             </>
           )}
         </Box>
+        {marker && (
+          <IconButton
+            aria-label={
+              isFavorite ? "Retirer des favoris" : "Ajouter aux favoris"
+            }
+            aria-pressed={isFavorite}
+            icon={isFavorite ? <FaHeart /> : <FaRegHeart />}
+            size="sm"
+            variant="ghost"
+            color={isFavorite ? "red.400" : "fg.muted"}
+            borderRadius="10px"
+            onClick={() =>
+              toggleFavorite({
+                layerId: layer.id,
+                markerId: marker.id,
+                title: marker.title,
+                subtitle: marker.subtitle,
+                position: marker.position,
+              })
+            }
+          />
+        )}
         <IconButton
           aria-label="Fermer le panneau de détails"
           icon={<FaXmark />}

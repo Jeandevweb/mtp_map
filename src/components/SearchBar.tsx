@@ -14,7 +14,16 @@ import {
 import type { Map as LeafletMap } from "leaflet";
 import { OpenStreetMapProvider } from "leaflet-geosearch";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { FaGear, FaLocationDot, FaMagnifyingGlass, FaXmark } from "react-icons/fa6";
+import {
+  FaGear,
+  FaHeart,
+  FaLocationDot,
+  FaMagnifyingGlass,
+  FaXmark,
+} from "react-icons/fa6";
+import { layerById } from "../layers/registry";
+import useFavoritesStore, { type Favorite } from "../store/useFavoritesStore";
+import useLayersStore from "../store/useLayersStore";
 import useUIStore from "../store/useUIStore";
 
 type SearchHit = { position: [number, number]; label: string };
@@ -34,8 +43,21 @@ const SearchBar = ({ map }: Props) => {
   const [isSearching, setIsSearching] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Referme la liste (favoris/résultats) au clic en dehors de la barre.
+  useEffect(() => {
+    const onPointerDown = (e: PointerEvent) => {
+      if (!containerRef.current?.contains(e.target as Node)) setIsOpen(false);
+    };
+    document.addEventListener("pointerdown", onPointerDown);
+    return () => document.removeEventListener("pointerdown", onPointerDown);
+  }, []);
   const setSettingsOpen = useUIStore((s) => s.setSettingsOpen);
   const setSearchResult = useUIStore((s) => s.setSearchResult);
+  const setSelection = useUIStore((s) => s.setSelection);
+  const setVisible = useLayersStore((s) => s.setVisible);
+  const favorites = useFavoritesStore((s) => s.favorites);
   const shadow = useColorModeValue("floating", "floatingDark");
 
   const provider = useMemo(
@@ -91,10 +113,21 @@ const SearchBar = ({ map }: Props) => {
     inputRef.current?.focus();
   };
 
+  const selectFavorite = (favorite: Favorite) => {
+    // S'assure que la couche du favori est affichée avant d'ouvrir le détail.
+    setVisible(favorite.layerId, true);
+    setSelection({ layerId: favorite.layerId, markerId: favorite.markerId });
+    setIsOpen(false);
+    map?.flyTo(favorite.position, 17, { duration: 0.8 });
+  };
+
   const showResults = isOpen && query.trim().length >= 3;
+  const showFavorites =
+    isOpen && query.trim().length < 3 && favorites.length > 0;
 
   return (
     <Box
+      ref={containerRef}
       position="absolute"
       top={{ base: 3, md: 4 }}
       left={{ base: 3, md: 4 }}
@@ -167,6 +200,66 @@ const SearchBar = ({ map }: Props) => {
             flexShrink={0}
           />
         </Flex>
+
+        {/* Mes favoris (champ vide) */}
+        {showFavorites && (
+          <>
+            <Divider borderColor="border.default" />
+            <Flex align="center" gap="2" px="4" pt="2.5" pb="1" color="fg.muted">
+              <Icon as={FaHeart} boxSize="3" color="red.400" />
+              <Text fontSize="xs" fontWeight="600">
+                Mes favoris
+              </Text>
+            </Flex>
+            <List pb="1.5" aria-label="Mes favoris">
+              {favorites.map((favorite) => {
+                const favLayer = layerById.get(favorite.layerId);
+                return (
+                  <ListItem key={favorite.markerId}>
+                    <Flex
+                      as="button"
+                      onClick={() => selectFavorite(favorite)}
+                      align="center"
+                      gap="3"
+                      w="100%"
+                      px="4"
+                      py="2"
+                      textAlign="left"
+                      _hover={{ bg: "bg.hover" }}
+                      _focusVisible={{ bg: "bg.hover", outline: "none" }}
+                      transition="background-color 0.15s ease-out"
+                    >
+                      {favLayer && (
+                        <Flex
+                          align="center"
+                          justify="center"
+                          boxSize="26px"
+                          borderRadius="8px"
+                          bg={favLayer.color}
+                          color="white"
+                          flexShrink={0}
+                          aria-hidden
+                        >
+                          <Icon as={favLayer.icon} boxSize="3" />
+                        </Flex>
+                      )}
+                      <Box minW={0}>
+                        <Text fontSize="sm" fontWeight="500" noOfLines={1}>
+                          {favorite.title}
+                        </Text>
+                        {favorite.subtitle && (
+                          <Text fontSize="xs" color="fg.muted" noOfLines={1}>
+                            {favorite.subtitle}
+                          </Text>
+                        )}
+                      </Box>
+                    </Flex>
+                  </ListItem>
+                );
+              })}
+            </List>
+          </>
+        )}
 
         {/* Résultats de recherche */}
         {showResults && (hits.length > 0 || !isSearching) && (
