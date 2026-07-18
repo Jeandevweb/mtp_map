@@ -1,5 +1,7 @@
 # MTP Map — Montpellier en direct
 
+[![CI](https://github.com/Jeandevweb/mtp_map/actions/workflows/ci.yml/badge.svg)](https://github.com/Jeandevweb/mtp_map/actions/workflows/ci.yml)
+
 Carte interactive des services utiles de Montpellier, alimentée par
 l'open data de Montpellier Méditerranée Métropole :
 
