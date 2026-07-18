@@ -1,7 +1,7 @@
-export const linkGoogle = (longitude: number, latitude: number, id: string) => {
-  return `https://www.google.com/maps/search/?api=1&query=${longitude},${latitude}&query_place_id=${id}`;
-};
+/** Liens externes Google Maps (attend l'ordre "latitude,longitude"). */
 
-export const linkGooglePlus = (longitude: number, latitude: number) => {
-  return `https://www.google.com/maps/dir/?api=1&destination=${longitude},${latitude}&origin&travelmode=walking`;
-};
+export const googleMapsSearch = (lat: number, lng: number) =>
+  `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+
+export const googleMapsDirections = (lat: number, lng: number) =>
+  `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=walking`;
