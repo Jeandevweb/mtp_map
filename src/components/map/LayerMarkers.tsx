@@ -4,6 +4,7 @@ import MarkerClusterGroup from "react-leaflet-cluster";
 import type { LayerDef } from "../../layers/types";
 import { useLayerData } from "../../services/queries";
 import useLayersStore from "../../store/useLayersStore";
+import useUIStore from "../../store/useUIStore";
 import { clusterIconFactory, layerMarkerIcon } from "../../utils/markerIcons";
 import MarkerPopup from "./MarkerPopup";
 
@@ -16,6 +17,9 @@ type Props = { layer: LayerDef };
  */
 const LayerMarkers = memo(function LayerMarkers({ layer }: Props) {
   const visible = useLayersStore((s) => s.visibility[layer.id]);
+  const selectedId = useUIStore((s) =>
+    s.selection?.layerId === layer.id ? s.selection.markerId : null
+  );
   const { data } = useLayerData(layer);
 
   if (!visible || !data) return null;
@@ -24,10 +28,21 @@ const LayerMarkers = memo(function LayerMarkers({ layer }: Props) {
     <Marker
       key={marker.id}
       position={marker.position}
-      icon={layerMarkerIcon(layer)}
+      icon={layerMarkerIcon(layer, marker.id === selectedId)}
+      zIndexOffset={marker.id === selectedId ? 1000 : 0}
       title={marker.title}
       alt={`${layer.shortLabel} : ${marker.title}`}
       riseOnHover
+      eventHandlers={{
+        click: () => {
+          // Ouvrir la bulle d'un AUTRE lieu ferme le panneau de détail
+          // en cours pour ne pas afficher deux lieux différents à la fois.
+          const { selection, setSelection } = useUIStore.getState();
+          if (selection && selection.markerId !== marker.id) {
+            setSelection(null);
+          }
+        },
+      }}
     >
       <Popup closeButton>
         <MarkerPopup layer={layer} marker={marker} />

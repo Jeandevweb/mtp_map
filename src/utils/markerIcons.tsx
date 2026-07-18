@@ -10,24 +10,34 @@ import type { LayerDef } from "../layers/types";
 
 const iconCache = new Map<string, L.DivIcon>();
 
-export function layerMarkerIcon(layer: LayerDef): L.DivIcon {
-  const cached = iconCache.get(layer.id);
+/**
+ * `selected` : version agrandie avec anneau accent, utilisée pour le
+ * marqueur dont le panneau de détail est ouvert — repérable d'un coup
+ * d'œil parmi les autres.
+ */
+export function layerMarkerIcon(layer: LayerDef, selected = false): L.DivIcon {
+  const key = selected ? `${layer.id}--selected` : layer.id;
+  const cached = iconCache.get(key);
   if (cached) return cached;
 
   const Icon = layer.icon;
+  const size = selected ? 42 : 30;
   const html = renderToStaticMarkup(
-    <span className="mtp-pin" style={{ backgroundColor: layer.color }}>
-      <Icon size={15} aria-hidden />
+    <span
+      className={`mtp-pin${selected ? " mtp-pin--selected" : ""}`}
+      style={{ backgroundColor: layer.color }}
+    >
+      <Icon size={selected ? 20 : 15} aria-hidden />
     </span>
   );
   const icon = L.divIcon({
     html,
     className: "mtp-pin-wrap",
-    iconSize: [30, 30],
-    iconAnchor: [15, 15],
-    popupAnchor: [0, -18],
+    iconSize: [size, size],
+    iconAnchor: [size / 2, size / 2],
+    popupAnchor: [0, -(size / 2 + 4)],
   });
-  iconCache.set(layer.id, icon);
+  iconCache.set(key, icon);
   return icon;
 }
 

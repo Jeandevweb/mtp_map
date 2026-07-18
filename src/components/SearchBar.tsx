@@ -23,6 +23,7 @@ import {
 } from "react-icons/fa6";
 import { layerById } from "../layers/registry";
 import useFavoritesStore, { type Favorite } from "../store/useFavoritesStore";
+import type { LayerDef } from "../layers/types";
 import useLayersStore from "../store/useLayersStore";
 import useUIStore from "../store/useUIStore";
 
@@ -189,6 +190,24 @@ const SearchBar = ({ map }: Props) => {
               flexShrink={0}
             />
           )}
+          {favorites.length > 0 && (
+            <IconButton
+              aria-label={`Mes favoris (${favorites.length})`}
+              title={`Mes favoris (${favorites.length})`}
+              icon={<FaHeart />}
+              size="md"
+              variant="ghost"
+              color="red.400"
+              borderRadius="12px"
+              flexShrink={0}
+              onClick={() => {
+                setQuery("");
+                setHits([]);
+                setIsOpen(true);
+                inputRef.current?.focus();
+              }}
+            />
+          )}
           <IconButton
             aria-label="Ouvrir les réglages"
             icon={<FaGear />}
@@ -212,51 +231,14 @@ const SearchBar = ({ map }: Props) => {
               </Text>
             </Flex>
             <List pb="1.5" aria-label="Mes favoris">
-              {favorites.map((favorite) => {
-                const favLayer = layerById.get(favorite.layerId);
-                return (
-                  <ListItem key={favorite.markerId}>
-                    <Flex
-                      as="button"
-                      onClick={() => selectFavorite(favorite)}
-                      align="center"
-                      gap="3"
-                      w="100%"
-                      px="4"
-                      py="2"
-                      textAlign="left"
-                      _hover={{ bg: "bg.hover" }}
-                      _focusVisible={{ bg: "bg.hover", outline: "none" }}
-                      transition="background-color 0.15s ease-out"
-                    >
-                      {favLayer && (
-                        <Flex
-                          align="center"
-                          justify="center"
-                          boxSize="26px"
-                          borderRadius="8px"
-                          bg={favLayer.color}
-                          color="white"
-                          flexShrink={0}
-                          aria-hidden
-                        >
-                          <Icon as={favLayer.icon} boxSize="3" />
-                        </Flex>
-                      )}
-                      <Box minW={0}>
-                        <Text fontSize="sm" fontWeight="500" noOfLines={1}>
-                          {favorite.title}
-                        </Text>
-                        {favorite.subtitle && (
-                          <Text fontSize="xs" color="fg.muted" noOfLines={1}>
-                            {favorite.subtitle}
-                          </Text>
-                        )}
-                      </Box>
-                    </Flex>
-                  </ListItem>
-                );
-              })}
+              {favorites.map((favorite) => (
+                <FavoriteRow
+                  key={favorite.markerId}
+                  favorite={favorite}
+                  layer={layerById.get(favorite.layerId)}
+                  onSelect={() => selectFavorite(favorite)}
+                />
+              ))}
             </List>
           </>
         )}
@@ -303,6 +285,78 @@ const SearchBar = ({ map }: Props) => {
         )}
       </Box>
     </Box>
+  );
+};
+
+/**
+ * Ligne d'un favori : la zone principale ouvre le lieu, la croix à
+ * droite le retire de la liste (deux boutons frères — pas d'imbrication).
+ */
+const FavoriteRow = ({
+  favorite,
+  layer,
+  onSelect,
+}: {
+  favorite: Favorite;
+  layer: LayerDef | undefined;
+  onSelect: () => void;
+}) => {
+  const toggleFavorite = useFavoritesStore((s) => s.toggleFavorite);
+
+  return (
+    <ListItem>
+      <Flex align="center" pr="2" _hover={{ bg: "bg.hover" }}>
+        <Flex
+          as="button"
+          onClick={onSelect}
+          align="center"
+          gap="3"
+          flex="1"
+          minW={0}
+          px="4"
+          py="2"
+          textAlign="left"
+          _focusVisible={{ bg: "bg.hover", outline: "none" }}
+        >
+          {layer && (
+            <Flex
+              align="center"
+              justify="center"
+              boxSize="26px"
+              borderRadius="8px"
+              bg={layer.color}
+              color="white"
+              flexShrink={0}
+              aria-hidden
+            >
+              <Icon as={layer.icon} boxSize="3" />
+            </Flex>
+          )}
+          <Box minW={0}>
+            <Text fontSize="sm" fontWeight="500" noOfLines={1}>
+              {favorite.title}
+            </Text>
+            {favorite.subtitle && (
+              <Text fontSize="xs" color="fg.muted" noOfLines={1}>
+                {favorite.subtitle}
+              </Text>
+            )}
+          </Box>
+        </Flex>
+        <IconButton
+          aria-label={`Retirer « ${favorite.title} » des favoris`}
+          title="Retirer des favoris"
+          icon={<FaXmark />}
+          size="sm"
+          variant="ghost"
+          color="fg.muted"
+          borderRadius="10px"
+          flexShrink={0}
+          _hover={{ color: "red.400", bg: "bg.hover" }}
+          onClick={() => toggleFavorite(favorite)}
+        />
+      </Flex>
+    </ListItem>
   );
 };
 
