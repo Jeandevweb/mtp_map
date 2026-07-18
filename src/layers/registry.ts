@@ -18,7 +18,7 @@ import type {
 import { plural, timeAgo, titleCase, toLatLng } from "../utils/format";
 import type { LayerDef, LayerId, MarkerData } from "./types";
 
-const API = "https://portail-api-data.montpellier3m.fr";
+export const API = "https://portail-api-data.montpellier3m.fr";
 
 /** Les compteurs qui n'ont pas émis depuis 24 h sont considérés hors service. */
 const ECOCOUNTER_MAX_AGE_MS = 24 * 60 * 60 * 1000;
