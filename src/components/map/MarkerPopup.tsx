@@ -4,11 +4,19 @@ import {
   Button,
   Flex,
   Icon,
+  IconButton,
   Link,
   Progress,
   Text,
 } from "@chakra-ui/react";
-import { FaDiamondTurnRight, FaCircleInfo, FaPersonWalking } from "react-icons/fa6";
+import {
+  FaDiamondTurnRight,
+  FaCircleInfo,
+  FaHeart,
+  FaPersonWalking,
+  FaRegHeart,
+} from "react-icons/fa6";
+import useFavoritesStore from "../../store/useFavoritesStore";
 import type { LayerDef, MarkerData } from "../../layers/types";
 import { googleMapsDirections } from "../../utils/externalLink";
 import {
@@ -28,6 +36,10 @@ type Props = {
 const MarkerPopup = ({ layer, marker }: Props) => {
   const setSelection = useUIStore((s) => s.setSelection);
   const userPosition = useUIStore((s) => s.userPosition);
+  const isFavorite = useFavoritesStore((s) =>
+    s.favorites.some((f) => f.markerId === marker.id)
+  );
+  const toggleFavorite = useFavoritesStore((s) => s.toggleFavorite);
   const [lat, lng] = marker.position;
   const status = marker.status;
   const colorScheme = status ? statusColorScheme(status.ratio) : null;
@@ -67,6 +79,27 @@ const MarkerPopup = ({ layer, marker }: Props) => {
             </Flex>
           )}
         </Box>
+        <IconButton
+          aria-label={
+            isFavorite ? "Retirer des favoris" : "Ajouter aux favoris"
+          }
+          aria-pressed={isFavorite}
+          icon={isFavorite ? <FaHeart /> : <FaRegHeart />}
+          size="xs"
+          variant="ghost"
+          color={isFavorite ? "red.400" : "fg.muted"}
+          borderRadius="8px"
+          flexShrink={0}
+          onClick={() =>
+            toggleFavorite({
+              layerId: layer.id,
+              markerId: marker.id,
+              title: marker.title,
+              subtitle: marker.subtitle,
+              position: marker.position,
+            })
+          }
+        />
       </Flex>
 
       {/* Disponibilité en un coup d'œil */}

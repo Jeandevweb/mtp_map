@@ -6,6 +6,7 @@ import type { LayerId } from "../layers/types";
 type LayersState = {
   visibility: Record<LayerId, boolean>;
   toggle: (id: LayerId) => void;
+  setVisible: (id: LayerId, visible: boolean) => void;
 };
 
 const defaultVisibility = Object.fromEntries(
@@ -20,6 +21,10 @@ const useLayersStore = create<LayersState>()(
       toggle: (id) =>
         set((state) => ({
           visibility: { ...state.visibility, [id]: !state.visibility[id] },
+        })),
+      setVisible: (id, visible) =>
+        set((state) => ({
+          visibility: { ...state.visibility, [id]: visible },
         })),
     }),
     {
