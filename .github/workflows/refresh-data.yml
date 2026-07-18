@@ -1,0 +1,39 @@
+# Rafraîchit chaque mois le snapshot des données open data statiques
+# (tram, fontaines, WC, bornes de recharge) et ouvre une pull request
+# si quelque chose a changé.
+name: Rafraîchir les données open data
+
+on:
+  schedule:
+    - cron: "0 6 1 * *" # le 1er de chaque mois à 6 h UTC
+  workflow_dispatch: # lançable à la main depuis l'onglet Actions
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Télécharger les données
+        run: node scripts/fetch-data.mjs
+
+      - name: Ouvrir une PR si les données ont changé
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "chore: rafraîchir le snapshot des données open data"
+          title: "Rafraîchir les données open data"
+          body: |
+            Snapshot mensuel automatique des GeoJSON statiques
+            (`public/data/`) depuis data.montpellier3m.fr.
+
+            Générée par le workflow `refresh-data.yml`.
+          branch: chore/refresh-data
+          delete-branch: true
