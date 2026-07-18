@@ -23,6 +23,8 @@ import {
   FaXmark,
 } from "react-icons/fa6";
 import { Fragment } from "react";
+import EcoCounterSparkline from "./EcoCounterSparkline";
+import ErrorBoundary from "./ErrorBoundary";
 import { layerById } from "../layers/registry";
 import { useLayerData } from "../services/queries";
 import useFavoritesStore from "../store/useFavoritesStore";
@@ -269,6 +271,13 @@ const DetailPanelContent = ({
             Ce lieu n'est plus disponible dans les données. Réactivez la couche
             « {layer.label} » ou fermez ce panneau.
           </Text>
+        )}
+
+        {/* Historique horaire, uniquement pour les éco-compteurs */}
+        {marker && layer.id === "ecocounters" && (
+          <ErrorBoundary>
+            <EcoCounterSparkline counterId={marker.id} />
+          </ErrorBoundary>
         )}
 
         {marker?.updatedAt && (
