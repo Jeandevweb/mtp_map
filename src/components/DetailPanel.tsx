@@ -20,6 +20,7 @@ import {
   FaHeart,
   FaPersonWalking,
   FaRegHeart,
+  FaStreetView,
   FaXmark,
 } from "react-icons/fa6";
 import { Fragment } from "react";
@@ -30,7 +31,11 @@ import { useLayerData } from "../services/queries";
 import useFavoritesStore from "../store/useFavoritesStore";
 import useUIStore from "../store/useUIStore";
 import type { LayerDef } from "../layers/types";
-import { googleMapsDirections, googleMapsSearch } from "../utils/externalLink";
+import {
+  googleMapsDirections,
+  googleMapsSearch,
+  googleStreetView,
+} from "../utils/externalLink";
 import {
   distanceMeters,
   formatDistanceWalk,
@@ -287,12 +292,11 @@ const DetailPanelContent = ({
         )}
 
         {marker && (
-          <Flex gap="2" mt="4">
+          <Flex direction="column" gap="2" mt="4">
             <Button
               as={Link}
               href={googleMapsDirections(...marker.position)}
               isExternal
-              flex="1"
               colorScheme="accent"
               leftIcon={<FaDiamondTurnRight />}
               borderRadius="12px"
@@ -300,17 +304,32 @@ const DetailPanelContent = ({
             >
               Itinéraire
             </Button>
-            <Button
-              as={Link}
-              href={googleMapsSearch(...marker.position)}
-              isExternal
-              variant="outline"
-              leftIcon={<FaArrowUpRightFromSquare />}
-              borderRadius="12px"
-              _hover={{ textDecoration: "none" }}
-            >
-              Google Maps
-            </Button>
+            <Flex gap="2">
+              <Button
+                as={Link}
+                href={googleStreetView(...marker.position)}
+                isExternal
+                flex="1"
+                variant="outline"
+                leftIcon={<FaStreetView />}
+                borderRadius="12px"
+                _hover={{ textDecoration: "none" }}
+              >
+                Vue au sol
+              </Button>
+              <Button
+                as={Link}
+                href={googleMapsSearch(...marker.position)}
+                isExternal
+                flex="1"
+                variant="outline"
+                leftIcon={<FaArrowUpRightFromSquare />}
+                borderRadius="12px"
+                _hover={{ textDecoration: "none" }}
+              >
+                Google Maps
+              </Button>
+            </Flex>
           </Flex>
         )}
 
